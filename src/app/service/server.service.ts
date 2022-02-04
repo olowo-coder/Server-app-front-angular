@@ -56,7 +56,7 @@ export class ServerService {
     catchError(this.handleError)
   );
 
-  delete$ = (serverId: number) => <Observable<CustomResponse>> 
+  delete$ = (serverId: string) => <Observable<CustomResponse>> 
             this.http.delete<CustomResponse>(`${this.apiUrl}/server/delete/${serverId}`)
   .pipe(
     tap(console.log),

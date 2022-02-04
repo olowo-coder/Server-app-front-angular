@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of, startWith } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, startWith, throwError } from 'rxjs';
 import { AppState } from './interface/app-state';
 import { CustomResponse } from './interface/custom-response';
 import { ServerService } from './service/server.service';
 import { DataState } from './enum/data-state.enum';
 import { Status } from './enum/status.enum';
-import { NgForm, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { Server } from './interface/server';
+import {
+  HttpInterceptor, HttpRequest,
+  HttpHandler, HttpEvent, HttpErrorResponse
+  } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +28,8 @@ export class AppComponent implements OnInit{
   isLoading$ = this.isLoading.asObservable();
 
   constructor(private serverService: ServerService){} 
+  
+  
 
   ngOnInit(): void {
     this.appState$ = this.serverService.servers$
@@ -51,7 +57,7 @@ export class AppComponent implements OnInit{
         this.filterSubject.next('');
             return { dataState: DataState.LOADED_STATE, appData: this.dataSubject.value }
       }),
-      startWith({ dataState: DataState.LOADING_STATE, appData: this.dataSubject.value  }),
+      startWith({ dataState: DataState.LOADED_STATE, appData: this.dataSubject.value  }),
       catchError((error: string) => {
         this.filterSubject.next('');
         return of({ dataState: DataState.ERROR_STATE, error });
@@ -108,6 +114,7 @@ export class AppComponent implements OnInit{
       }),
       startWith({ dataState: DataState.LOADING_STATE, appData: this.dataSubject.value  }),
       catchError((error: string) => {
+        console.log(error);
         return of({ dataState: DataState.ERROR_STATE, error });
       })
     );

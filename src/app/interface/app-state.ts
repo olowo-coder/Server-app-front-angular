@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { DataState } from "../enum/data-state.enum";
 
 export interface AppState<T>{
